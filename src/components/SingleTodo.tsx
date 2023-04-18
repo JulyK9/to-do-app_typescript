@@ -14,9 +14,17 @@ const SingleTodo: React.FC<Props> = ({ todo, todos, setTodos }) => {
     // console.log(id);
     setTodos(
       todos.map((todoItem) => {
-        return todoItem.id === todo.id
+        return todoItem.id === id
           ? { ...todoItem, isCompleted: !todoItem.isCompleted }
           : todoItem;
+      })
+    );
+  };
+
+  const handleDelete = (id: number) => {
+    setTodos(
+      todos.filter((todoItem) => {
+        return todoItem.id !== id;
       })
     );
   };
@@ -32,7 +40,7 @@ const SingleTodo: React.FC<Props> = ({ todo, todos, setTodos }) => {
         <span className="icon">
           <AiFillEdit />
         </span>
-        <span className="icon">
+        <span className="icon" onClick={() => handleDelete(todo.id)}>
           <AiFillDelete />
         </span>
         <span className="icon" onClick={() => handleDone(todo.id)}>
