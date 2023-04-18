@@ -10,9 +10,24 @@ type Props = {
 
 // const SingleTodo = ({ todo, todos, setTodos }: Props) => {
 const SingleTodo: React.FC<Props> = ({ todo, todos, setTodos }) => {
+  const handleDone = (id: number) => {
+    // console.log(id);
+    setTodos(
+      todos.map((todoItem) => {
+        return todoItem.id === todo.id
+          ? { ...todoItem, isCompleted: !todoItem.isCompleted }
+          : todoItem;
+      })
+    );
+  };
+
   return (
     <form className="todos__single">
-      <span className="todos__single--text">{todo.todo}</span>
+      {todo.isCompleted ? (
+        <s className="todos__single--text">{todo.todo}</s>
+      ) : (
+        <span className="todos__single--text">{todo.todo}</span>
+      )}
       <div>
         <span className="icon">
           <AiFillEdit />
@@ -20,7 +35,7 @@ const SingleTodo: React.FC<Props> = ({ todo, todos, setTodos }) => {
         <span className="icon">
           <AiFillDelete />
         </span>
-        <span className="icon">
+        <span className="icon" onClick={() => handleDone(todo.id)}>
           <AiOutlineCheck />
         </span>
       </div>
