@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { Todo } from '../ model';
 import { AiFillEdit, AiFillDelete, AiOutlineCheck } from 'react-icons/ai';
 import '../style/styles.css';
@@ -10,14 +11,17 @@ type Props = {
 
 // const SingleTodo = ({ todo, todos, setTodos }: Props) => {
 const SingleTodo: React.FC<Props> = ({ todo, todos, setTodos }) => {
+  const [edit, setEdit] = useState<boolean>(false);
+  const [editTodo, setEditTodo] = useState<string>(todo.todo);
+
   const handleDone = (id: number) => {
     // console.log(id);
     setTodos(
-      todos.map((todoItem) => {
-        return todoItem.id === id
+      todos.map((todoItem) =>
+        todoItem.id === id
           ? { ...todoItem, isCompleted: !todoItem.isCompleted }
-          : todoItem;
-      })
+          : todoItem
+      )
     );
   };
 
@@ -29,17 +33,47 @@ const SingleTodo: React.FC<Props> = ({ todo, todos, setTodos }) => {
     );
   };
 
+  const submitEditTodo = (e: React.FormEvent, editTodoId: number) => {
+    e.preventDefault();
+
+    setTodos(
+      todos.map((todoItem) =>
+        todoItem.id === editTodoId ? { ...todoItem, todo: editTodo } : todoItem
+      )
+    );
+    setEdit(false);
+  };
+
+  const handleEdit = () => {
+    if (!edit && !todo.isCompleted) setEdit(!edit);
+  };
+
   return (
-    <form className="todos__single">
-      {todo.isCompleted ? (
+    <form
+      className="todos__single"
+      onSubmit={(e) => submitEditTodo(e, todo.id)}
+    >
+      {edit ? (
+        <input
+          className="todos__single--text"
+          value={editTodo}
+          onChange={(e) => setEditTodo(e.target.value)}
+        />
+      ) : todo.isCompleted ? (
         <s className="todos__single--text">{todo.todo}</s>
       ) : (
         <span className="todos__single--text">{todo.todo}</span>
       )}
       <div>
-        <span className="icon">
-          <AiFillEdit />
-        </span>
+        {!edit ? (
+          <span className="icon" onClick={handleEdit}>
+            <AiFillEdit />
+          </span>
+        ) : (
+          <span className="icon" onClick={(e) => submitEditTodo(e, todo.id)}>
+            <AiFillEdit />
+          </span>
+        )}
         <span className="icon" onClick={() => handleDelete(todo.id)}>
           <AiFillDelete />
         </span>
