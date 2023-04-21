@@ -47,6 +47,7 @@ const TodoList: React.FC<Props> = ({
                 index={index}
               />
             ))}
+            {provided.placeholder}
           </div>
         )}
       </Droppable>
@@ -67,6 +68,7 @@ const TodoList: React.FC<Props> = ({
                 index={index}
               />
             ))}
+            {provided.placeholder}
           </div>
         )}
       </Droppable>
